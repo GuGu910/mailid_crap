@@ -1,4 +1,4 @@
-# mailid_grap
+# mailid_grab
 
 	    The python script which is running on selenium will open the chrome browser (both google and yahoo) 
 	    and will search the content by the string `(Ex. "domain" email)` and grab the whole <html>  content 
