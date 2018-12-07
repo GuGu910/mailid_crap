@@ -1,16 +1,15 @@
 # mailid_crap
 
-	    The python script which is running on selenium will open the chrome browser and searching(both 
-	    google and yahoo) the content by the string `(Ex. "domain" email)` and crap the whole <html> 
-	    content as string.
+	    The python script which is running on selenium will open the chrome browser (both google and yahoo) 
+	    and will search the content by the string `(Ex. "domain" email)` and grab the whole <html>  content 
+	    as string. Finally it will  Process the whole string content and matches only mail ID's.
 	    
 	    Process the whole string content and matching only mail ID's.
 	    
 	    
 	    ## Pre-requesites:
 	    
-	    1. Python 3.7 or higher than this version should be installed.
-	       `https://www.python.org/downloads/`
+	    1. Python 3.7 or higher than this version should be installed. [Download Here](https://www.python.org/downloads/)
 	    2. Selenium should be installed.
 	       `pip install selenium`
 	    
