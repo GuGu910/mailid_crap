@@ -9,8 +9,10 @@
 	    
 	    ## Pre-requesites:
 	    
-	    1. Python 3.6 or higher than this version should be installed.
+	    1. Python 3.7 or higher than this version should be installed.
+	       `https://www.python.org/downloads/`
 	    2. Selenium should be installed.
+	       `pip install selenium`
 	    
 	    
 	    ## How to run:
