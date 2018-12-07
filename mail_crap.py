@@ -84,10 +84,10 @@ if __name__ == '__main__':
 
         # Collecting the domains which is blocked by google
         if 'unusual' in lines:
-            print(lines)
+            # print(lines)
             lines = google_search(domain, option, url='y')
             failed_domains.append(domain)
-            print(failed_domains)
+            # print(failed_domains)
 
         # Matching all the mailIDs from each line
         for line in lines:
@@ -109,7 +109,7 @@ if __name__ == '__main__':
                             ID.append(str(mail).lower())
 
         mails[domain] = ID
-        print(ID)
+        # print(ID)
 
         # Getting mails from mails.csv file
         if os.path.isfile('mails.csv'):
