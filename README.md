@@ -4,7 +4,7 @@
 	    google and yahoo) the content by the string `(Ex. "domain" email)` and crap the whole <html> 
 	    content as string.
 	    
-	    Process the string whole content and matching only mail ID's.
+	    Process the whole string content and matching only mail ID's.
 	    
 	    
 	    ## Pre-requestics:
