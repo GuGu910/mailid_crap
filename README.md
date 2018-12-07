@@ -15,9 +15,10 @@
 	    
 	    ## How to run:
 	    
-	    1. Put a punch of domains in a file `domains`.
-	    2. Just run a `mail_crap.py`.
-	    3. Finally all mails will be saved in a file mails.csv
+	    1. Clone the code by `git clone https://github.com/GuGu910/mailid_crap.git`
+	    2. Put a punch of domains in a file `domains`.
+	    3. Just run a `mail_crap.py`.
+	    4. Finally all mails will be saved in a file mails.csv
 	    
 	    
 	    
