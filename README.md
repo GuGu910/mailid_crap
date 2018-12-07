@@ -2,10 +2,8 @@
 
 	    The python script which is running on selenium will open the chrome browser (both google and yahoo) 
 	    and will search the content by the string `(Ex. "domain" email)` and grab the whole <html>  content 
-	    as string. Finally it will  Process the whole string content and matches only mail ID's.
-	    
-	    Process the whole string content and matching only mail ID's.
-	    
+	    as string. Finally it will process the whole string content and matches only mail ID's.
+
 	    
 	    ## Pre-requesites:
 	    
