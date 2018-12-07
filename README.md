@@ -7,7 +7,7 @@
 	    Process the whole string content and matching only mail ID's.
 	    
 	    
-	    ## Pre-requestics:
+	    ## Pre-requesites:
 	    
 	    1. Python 3.6 or higher than this version should be installed.
 	    2. Selenium should be installed.
