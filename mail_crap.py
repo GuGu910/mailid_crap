@@ -59,7 +59,7 @@ if __name__ == '__main__':
     time_stamp = (datetime.date(datetime.now())).strftime('%d%m%y') + '_' + str(
         (datetime.time(datetime.now())).strftime('%H%M%S'))
 
-    # Taking backup of old mails.csv if the file is empty
+    # Taking backup of old mails.csv if the file is non-empty
     if os.path.isfile('mails.csv'):
         with open('mails.csv') as f:
             lines = f.readlines()
