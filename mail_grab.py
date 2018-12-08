@@ -16,7 +16,7 @@ def google_search(dom, opt, url):
             url = 'https://in.search.yahoo.com/search?p="' + str(dom) + '" email'
         if sys.platform == 'linux':
             driver_path = './webdriver/chromedriver_linux64'
-        if sys.platform == 'nt':
+        if sys.platform == 'win32':
             driver_path = './webdriver/chromedriver.exe'
         browser = webdriver.Chrome(executable_path=driver_path, options=opt)
         browser.get(url)
@@ -42,6 +42,7 @@ if __name__ == '__main__':
 
     domains = []
     failed_domains = []
+
     # Getting the Domains from the file
     with open('domains', 'r') as f:
         lines = f.readlines()
@@ -75,16 +76,21 @@ if __name__ == '__main__':
     # Looping all the domains
     domain: str
     for domain in domains:
-        lines = google_search(domain, option, url='g')
+        captcha_str = ''
+
+        while not captcha_str:
+            lines = google_search(domain, option, url='y')
+            captcha_str = 'usual'
+            if 'unusual' in lines:
+                captcha_str = 'unusual'
 
         ID = []
         ms = []
 
         # print(lines)
 
-        # Collecting the domains which is blocked by google
-        if 'unusual' in lines:
-            # print(lines)
+        # Collecting the domains which is blocked by google and searching by Yahoo
+        if captcha_str == 'unusual':
             lines = google_search(domain, option, url='y')
             failed_domains.append(domain)
             # print(failed_domains)
