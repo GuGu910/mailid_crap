@@ -1,7 +1,7 @@
-from Mail_Scrap import mail_grab
 from datetime import datetime
 
 import os
+import mail_grab
 
 
 def domains_file_test():
@@ -36,11 +36,13 @@ if __name__ == '__main__':
 
     Test_Results = {}
 
-    print("\n******* Testing mail.grab.py *******")
+    print("******* Testing mail.grab.py *******")
     domains_file_test()
     results = mails_bkp_test()
     for result in results:
         print("{:<30}: {:<15}".format(result, results[result]))
+
+
 
 
 

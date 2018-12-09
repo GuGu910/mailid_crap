@@ -9,7 +9,6 @@ import progressbar
 
 def domain_exist():
     if not os.path.isfile('domains'):
-        # print("\nFile 'domains' doesn't exist.")
         return "File 'domains' doesn't exist."
 
 
@@ -36,7 +35,7 @@ def backup_mails(ts):
                 file_name = 'mails_' + time_stam + '.csv'
                 os.rename('mails.csv', file_name)
         f.close()
-    return "Backup Done. File name %s" % file_name
+        return "Backup Done. File name %s" % file_name
 
 
 def search_engine(search_eng, dom):

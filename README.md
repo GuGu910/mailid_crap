@@ -21,4 +21,9 @@
 	    4. Finally all mails will be saved in a file mails.csv
 	    
 	    
+	    ## Testing output
 	    
+	    ******* Testing mail.grab.py *******
+        domain_file_empty             : PASS           
+        domain_file_not_exist         : PASS           
+        mails_bkp                     : PASS 
