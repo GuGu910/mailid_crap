@@ -174,5 +174,3 @@ if __name__ == '__main__':
                 f.write(domain + '\n')
         f.close()
     # print(failed_domains)
-
-

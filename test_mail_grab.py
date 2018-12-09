@@ -41,8 +41,3 @@ if __name__ == '__main__':
     results = mails_bkp_test()
     for result in results:
         print("{:<30}: {:<15}".format(result, results[result]))
-
-
-
-
-
