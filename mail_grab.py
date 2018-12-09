@@ -9,22 +9,35 @@ import progressbar
 
 def domain_exist():
     if not os.path.isfile('domains'):
+        # print("\nFile 'domains' doesn't exist.")
         return "File 'domains' doesn't exist."
-        sys.exit(1)
 
 
-def domains():
+def get_domains():
+    doms = []
     with open('domains', 'r') as f:
         lines = f.readlines()
         if not lines:
-            print("\nFile 'domains' is empty.")
+            return "File 'domains' is empty."
             sys.exit(1)
         for domain in lines:
-            if domain not in domains:
+            if domain not in doms:
                 domain = domain.rstrip()
-                domains.append(domain)
+                doms.append(domain)
         f.close()
-    # print(domains)
+    return doms
+
+
+def backup_mails(ts):
+    time_stam = ts
+    if os.path.isfile('mails.csv'):
+        with open('mails.csv') as f:
+            isemp = f.readlines()
+            if isemp:
+                file_name = 'mails_' + time_stam + '.csv'
+                os.rename('mails.csv', file_name)
+        f.close()
+    return "Backup Done. File name %s" % file_name
 
 
 def search_engine(search_eng, dom):
@@ -66,20 +79,24 @@ def google_search(dom, opt, key):
 
 if __name__ == '__main__':
 
-    domains = []
     failed_domains = []
     mails = {}
     time_stamp = (datetime.date(datetime.now())).strftime('%d%m%y') + '_' + str(
         (datetime.time(datetime.now())).strftime('%H%M%S'))
 
-    # Taking backup of old mails.csv if the file is non-empty
-    if os.path.isfile('mails.csv'):
-        with open('mails.csv') as f:
-            lines = f.readlines()
-            if lines:
-                file_name = 'mails_' + time_stamp + '.csv'
-                os.rename('mails.csv', file_name)
-            f.close()
+    err = domain_exist()                        # Checking existence of domains file
+    if err:
+        print(f"\n{str(err)}")
+        sys.exit(1)
+
+    domains = get_domains()                     # Getting mail ids from a domains file
+    if type(domains).__name__ == 'str':
+        print(f"\n{str(domains)}")
+        sys.exit(1)
+
+    status = backup_mails(time_stamp)           # Taking backup of old mails.csv if the file is non-empty
+    if status:
+        print(status)
 
     # Browser Option for Chrome
     option = webdriver.ChromeOptions()
@@ -159,3 +176,5 @@ if __name__ == '__main__':
                 f.write(domain + '\n')
         f.close()
     # print(failed_domains)
+
+
