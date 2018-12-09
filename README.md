@@ -15,15 +15,15 @@
 	    
 	    ## How to run:
 	    
-	    1. Clone the code by `git clone https://github.com/GuGu910/mailid_grap.git`
+	    1. Clone the code by `git clone https://github.com/GuGu910/mailid_grab.git`
 	    2. Put a punch of domains in a file `domains`.
-	    3. Just run a `mail_crap.py`.
+	    3. Just run a `mail_grab.py`.
 	    4. Finally all mails will be saved in a file mails.csv
 	    
 	    
 	    ## Testing output
 	    
-	    ******* Testing mail.grab.py *******
+	    ******* Testing mail_grab.py *******
         domain_file_empty             : PASS           
         domain_file_not_exist         : PASS           
         mails_bkp                     : PASS 
