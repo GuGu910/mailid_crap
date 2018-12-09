@@ -7,6 +7,26 @@ import sys
 import progressbar
 
 
+def domain_exist():
+    if not os.path.isfile('domains'):
+        return "File 'domains' doesn't exist."
+        sys.exit(1)
+
+
+def domains():
+    with open('domains', 'r') as f:
+        lines = f.readlines()
+        if not lines:
+            print("\nFile 'domains' is empty.")
+            sys.exit(1)
+        for domain in lines:
+            if domain not in domains:
+                domain = domain.rstrip()
+                domains.append(domain)
+        f.close()
+    # print(domains)
+
+
 def search_engine(search_eng, dom):
     key = search_eng
     try:
@@ -45,27 +65,9 @@ def google_search(dom, opt, key):
 
 
 if __name__ == '__main__':
-    # Checking existence of domains file
-    if not os.path.isfile('domains'):
-        print("\nFile 'domains' doesn't exist.")
-        sys.exit(1)
 
     domains = []
     failed_domains = []
-
-    # Getting the Domains from the file
-    with open('domains', 'r') as f:
-        lines = f.readlines()
-        if not lines:
-            print("\nFile 'domains' is empty.")
-            sys.exit(1)
-        for domain in lines:
-            if domain not in domains:
-                domain = domain.rstrip()
-                domains.append(domain)
-        f.close()
-    # print(domains)
-
     mails = {}
     time_stamp = (datetime.date(datetime.now())).strftime('%d%m%y') + '_' + str(
         (datetime.time(datetime.now())).strftime('%H%M%S'))
