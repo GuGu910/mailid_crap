@@ -19,7 +19,6 @@ def get_domains():
         lines = f.readlines()
         if not lines:
             return "File 'domains' is empty."
-            sys.exit(1)
         for domain in lines:
             if domain not in doms:
                 domain = domain.rstrip()
