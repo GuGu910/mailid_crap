@@ -4,16 +4,29 @@ from datetime import datetime
 import re
 import os
 import sys
+import progressbar
 
 
-def google_search(dom, opt, url):
-    global driver_path
-    # print(url)
+def search_engine(search_eng, dom):
+    key = search_eng
     try:
-        if url == 'g':
+        if key == 'g':
             url = 'https://google.com/?#q="' + str(dom) + '" email'
-        if url == 'y':
+        if key == 'y':
             url = 'https://in.search.yahoo.com/search?p="' + str(dom) + '" email'
+        if key == 'ddg':
+            url = 'https://duckduckgo.com/?q="' + str(dom) + '" email'
+    except Exception as e:
+        return 'Error in search_engine(): %s' % str(e)
+    else:
+        return url
+
+
+def google_search(dom, opt, key):
+    global driver_path
+    try:
+        url = search_engine(key, dom)
+        # print(url)
         if sys.platform == 'linux':
             driver_path = './webdriver/chromedriver_linux64'
         if sys.platform == 'win32':
@@ -73,31 +86,47 @@ if __name__ == '__main__':
     option = webdriver.ChromeOptions()
     # option.add_argument(" — incognito")
 
-    # Looping all the domains
     domain: str
-    for domain in domains:
-        captcha_str = ''
+    ite = 0
+    captcha_str = ''
+    mail_ids = []
+    ID = []
+
+    # Looping all the domains
+    for domain in progressbar.progressbar(domains):
+        # Simple Progress
+        # print('[' + str(domains.index(domain) + 1) + '/' + str(len(domains)) + ']  ' + str(domain))
 
         while not captcha_str:
-            lines = google_search(domain, option, url='y')
-            captcha_str = 'usual'
-            if 'unusual' in lines:
+            lines = google_search(domain, option, key='g')
+            captcha_str = 'stop_loop'
+            if 'unusual' in lines and 'traffic' in lines:
                 captcha_str = 'unusual'
+                if domain not in failed_domains:
+                    failed_domains.append(domain)
 
-        ID = []
-        ms = []
+        if os.path.isfile('mails.csv'):
+            for m_ids in ID:
+                if m_ids not in mail_ids:
+                    mail_ids.append(m_ids)
+
+        ID = []     # Resetting List ID
 
         # print(lines)
 
         # Collecting the domains which is blocked by google and searching by Yahoo
+        # Recall the google search type url after a five unusual traffic
         if captcha_str == 'unusual':
-            lines = google_search(domain, option, url='y')
-            failed_domains.append(domain)
-            # print(failed_domains)
+            lines = google_search(domain, option, key='ddg')
+            ite += 1
+            if ite % 5 == 0:
+                captcha_str = ''
+        else:
+            captcha_str = ''
 
         # Matching all the mailIDs from each line
         for line in lines:
-            mailID = re.findall('[\w]+@[\w\W]+.com', line)
+            mailID = re.findall('[\w]+@[\w\W]+.com', line)      # Matching mail ID
             # print(mailID)
             if mailID:
                 for mail in mailID:
@@ -115,30 +144,19 @@ if __name__ == '__main__':
                             ID.append(str(mail).lower())
 
         mails[domain] = ID
-        # print(ID)
 
-        # Getting mails from mails.csv file
-        if os.path.isfile('mails.csv'):
-            with open('mails.csv', 'r') as f:
-                ms = f.readlines()
-                # Removing \n from mailID
-                for item in range(len(ms)):
-                    ms[item] = ms[item].rstrip()
-            f.close()
-
-        if not ms:
-            ms = ['']
-
+        # Appending mails to a file
         with open('mails.csv', 'a') as f:
             if mails[domain]:
                 for ids in mails[domain]:
                     # Filtering duplicate mailID
-                    if ids not in ms:
+                    if ids not in mail_ids:
                         f.write(str(ids) + '\n')
-            f.close()
+        f.close()
 
     if failed_domains:
         with open('failed_domains', 'a') as f:
             for fdom in failed_domains:
                 f.write(domain + '\n')
         f.close()
+    # print(failed_domains)
