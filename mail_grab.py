@@ -37,10 +37,7 @@ def google_search(dom, opt, key):
         # Getting the complete HTML content from a google search in a string format
         elements = browser.find_element_by_tag_name('html')
         content = str(elements.text).split()
-
-        # Closing the browser if it is a last domain
-        # if len(domains) == domains.index(dom) + 1:
-        browser.close()
+        browser.close()     # Closing browser
     except Exception as e:
         return 'Error in google_search(): %s' % str(e)
     else:
