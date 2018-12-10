@@ -4,49 +4,62 @@ from datetime import datetime
 import re
 import os
 import sys
+import time
 import progressbar
 
 
 def domain_exist():
-    if not os.path.isfile('domains'):
+    if os.path.isfile('domains'):
         return "File 'domains' doesn't exist."
 
 
 def get_domains():
     doms = []
-    with open('domains', 'r') as f:
-        lines = f.readlines()
-        if not lines:
-            return "File 'domains' is empty."
-        for domain in lines:
-            if domain not in doms:
-                domain = domain.rstrip()
-                doms.append(domain)
-        f.close()
-    return doms
+    try:
+        with open('domains', 'r') as f:
+            lines = f.readlines()
+            if lines:
+                return "File 'domains' is empty."
+            for domain in lines:
+                if domain not in doms:
+                    domain = domain.rstrip()
+                    doms.append(domain)
+            f.close()
+    except Exception as e:
+        return 'Error in get_domains(): %s' % str(e)
+    else:
+        return doms
 
 
 def backup_mails(ts):
-    time_stam = ts
-    if os.path.isfile('mails.csv'):
-        with open('mails.csv') as f:
-            isemp = f.readlines()
-            if isemp:
-                file_name = 'mails_' + time_stam + '.csv'
-                os.rename('mails.csv', file_name)
-        f.close()
+    global file_name
+    # time_stam = ts
+    try:
+        if time_stam:
+            if os.path.isfile('mails.csv'):
+                with open('mails.csv') as f:
+                    isemp = f.readlines()
+                    if isemp:
+                        file_name = 'mails_' + time_stam + '.csv'
+                        os.rename('mails.csv', file_name)
+                f.close()
+    except Exception as e:
+        return 'Error in backup_mails(): %s ' % str(e)
+    else:
         return "Backup Done. File name %s" % file_name
 
 
 def search_engine(search_eng, dom):
     key = search_eng
     try:
-        if key == 'g':
+        if key == 'google':
             url = 'https://google.com/?#q="' + str(dom) + '" email'
-        if key == 'y':
+        if key == 'yahoo':
             url = 'https://in.search.yahoo.com/search?p="' + str(dom) + '" email'
         if key == 'ddg':
             url = 'https://duckduckgo.com/?q="' + str(dom) + '" email'
+        if key == 'ask':
+            url = 'https://www.ask.com/web?q="' + str(dom) + '" email'
     except Exception as e:
         return 'Error in search_engine(): %s' % str(e)
     else:
@@ -68,6 +81,7 @@ def google_search(dom, opt, key):
         # Getting the complete HTML content from a google search in a string format
         elements = browser.find_element_by_tag_name('html')
         content = str(elements.text).split()
+        time.sleep(2)
         browser.close()     # Closing browser
     except Exception as e:
         return 'Error in google_search(): %s' % str(e)
@@ -112,7 +126,7 @@ if __name__ == '__main__':
         # print('[' + str(domains.index(domain) + 1) + '/' + str(len(domains)) + ']  ' + str(domain))
 
         while not captcha_str:
-            lines = google_search(domain, option, key='g')
+            lines = google_search(domain, option, key='google')
             captcha_str = 'stop_loop'
             if 'unusual' in lines and 'traffic' in lines:
                 captcha_str = 'unusual'
@@ -128,10 +142,9 @@ if __name__ == '__main__':
 
         # print(lines)
 
-        # Collecting the domains which is blocked by google and searching by Yahoo
         # Recall the google search type url after a five unusual traffic
         if captcha_str == 'unusual':
-            lines = google_search(domain, option, key='ddg')
+            lines = google_search(domain, option, key='ask')
             ite += 1
             if ite % 5 == 0:
                 captcha_str = ''

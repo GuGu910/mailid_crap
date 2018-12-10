@@ -5,16 +5,24 @@ import mail_grab
 
 
 def domains_file_test():
-    if os.path.isfile('domains') or not os.path.isfile('domains'):
-        with open('domains', "w") as f:
-            f.write('')
-        f.close()
-        if mail_grab.get_domains() == "File 'domains' is empty.":
-            Test_Results['domain_file_empty'] = 'PASS'
-        os.remove('domains')
-        if mail_grab.domain_exist() == "File 'domains' doesn't exist.":
-            Test_Results['domain_file_not_exist'] = 'PASS'
-    return Test_Results
+    try:
+        if os.path.isfile('domains') or not os.path.isfile('domains'):
+            with open('domains', "w") as f:
+                f.write('')
+            f.close()
+            if mail_grab.get_domains() == "File 'domains' is empty.":
+                Test_Results['domain_file_empty'] = 'PASS'
+            else:
+                Test_Results['domain_file_empty'] = 'FAILED'
+            os.remove('domains')
+            if mail_grab.domain_exist() == "File 'domains' doesn't exist.":
+                Test_Results['domain_file_not_exist'] = 'PASS'
+            else:
+                Test_Results['domain_file_not_exist'] = 'FAILED'
+    except Exception as e:
+        return 'Error in domains_file_test(): %s' % str(e)
+    else:
+        return Test_Results
 
 
 def mails_bkp_test():

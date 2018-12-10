@@ -27,3 +27,8 @@
         domain_file_empty             : PASS           
         domain_file_not_exist         : PASS           
         mails_bkp                     : PASS 
+        
+        ******* Testing mail.grab.py *******
+        domain_file_empty             : FAILED         
+        domain_file_not_exist         : FAILED         
+        mails_bkp                     : FAILED  
