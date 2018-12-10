@@ -1,34 +1,35 @@
 # mailid_grab
+  The python script which is running on selenium will open the chrome browser and will 
+search the content by the string `(Ex. "test.com" email)` and grab the whole `<html>`  content 
+as string. Finally it will process the whole string content and matches only mail ID's.
 
-	    The python script which is running on selenium will open the chrome browser (both google and yahoo) 
-	    and will search the content by the string `(Ex. "domain" email)` and grab the whole <html>  content 
-	    as string. Finally it will process the whole string content and matches only mail ID's.
+#### Pre-requisites:
+	    
+1. [Python 3.7](https://www.python.org/downloads/) should be installed.
+2. [Selenium](https://pypi.org/project/selenium/) should be installed. `pip install selenium`
+3. [Progressbar](https://pypi.org/project/progressbar2/) should be installed. `pip install progressbar2`
+	    
+#### How to run:
+	    
+1. Download the `mailid_grab` code [here](https://github.com/GuGu910/mailid_grab/archive/master.zip).
+2. Put a punch of domains in a file [domains](domains).
+3. Just run a [mail_grab.py](mail_grab.py).
+4. Finally all mails will be saved in a file mails.csv
+	    
+	    
+#### Testing results:
 
-	    
-	    ## Pre-requesites:
-	    
-	    1. Python 3.7 or higher than this version should be installed.
-	       `https://www.python.org/downloads/`
-	    2. Selenium should be installed.
-	       `pip install selenium`
-	    
-	    
-	    ## How to run:
-	    
-	    1. Clone the code by `git clone https://github.com/GuGu910/mailid_grab.git`
-	    2. Put a punch of domains in a file `domains`.
-	    3. Just run a `mail_grab.py`.
-	    4. Finally all mails will be saved in a file mails.csv
-	    
-	    
-	    ## Testing output
-	    
-	    ******* Testing mail_grab.py *******
-        domain_file_empty             : PASS           
-        domain_file_not_exist         : PASS           
-        mails_bkp                     : PASS 
-        
-        ******* Testing mail.grab.py *******
-        domain_file_empty             : FAILED         
-        domain_file_not_exist         : FAILED         
-        mails_bkp                     : FAILED  
+PASS Scenario:
+```	    
+******* Testing mail_grab.py *******
+domain_file_empty             : PASS           
+domain_file_not_exist         : PASS           
+mails_bkp                     : PASS 
+```
+FAILED Scenario:
+```     
+******* Testing mail.grab.py *******
+domain_file_empty             : FAILED         
+domain_file_not_exist         : FAILED         
+mails_bkp                     : FAILED  
+```
