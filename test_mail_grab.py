@@ -15,10 +15,10 @@ def domains_file_test():
             else:
                 Test_Results['domain_file_empty'] = 'FAILED'
             os.remove('domains')
-            if mail_grab.domain_exist() == "File 'domains' doesn't exist.":
-                Test_Results['domain_file_not_exist'] = 'PASS'
+            if mail_grab.domain_exist() == "Domains file created.":
+                Test_Results['domain_file_not_exist_created'] = 'PASS'
             else:
-                Test_Results['domain_file_not_exist'] = 'FAILED'
+                Test_Results['domain_file_not_exist_created'] = 'FAILED'
     except Exception as e:
         return 'Error in domains_file_test(): %s' % str(e)
     else:
