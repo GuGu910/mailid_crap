@@ -11,7 +11,7 @@ as string. Finally it will process the whole string content and matches only mai
 	    
 #### How to run:
 	    
-1. Download the `mailid_grab` code [here](https://github.com/GuGu910/mailid_grab/archive/master.zip).
+1. Download the `mailid_grab` code [here](https://github.com/GuGu910/mailid_grab/archive/master.zip) and extract into any directory/folder.
 2. Put a punch of domains in a file [domains](domains).
 3. Just run a [test_mail_grab.py](test_mail_grab.py) before running [mail_grab.py](mail_grab.py).
 4. If all test status `PASS` then you can run [mail_grab.py](mail_grab.py).
