@@ -24,13 +24,13 @@ PASS Scenario:
 ```	    
 ******* Testing mail_grab.py *******
 domain_file_empty             : PASS           
-domain_file_not_exist         : PASS           
+domain_file_not_exist_created : PASS           
 mails_bkp                     : PASS 
 ```
 FAILED Scenario:
 ```     
 ******* Testing mail.grab.py *******
 domain_file_empty             : FAILED         
-domain_file_not_exist         : FAILED         
+domain_file_not_exist_created : FAILED         
 mails_bkp                     : FAILED  
 ```

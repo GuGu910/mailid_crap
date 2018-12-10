@@ -2,14 +2,13 @@ from datetime import datetime
 
 import os
 import mail_grab
+import subprocess
 
 
 def domains_file_test():
     try:
         if os.path.isfile('domains') or not os.path.isfile('domains'):
-            with open('domains', "w") as f:
-                f.write('')
-            f.close()
+            subprocess.check_output(["touch", "domains"])
             if mail_grab.get_domains() == "File 'domains' is empty.":
                 Test_Results['domain_file_empty'] = 'PASS'
             else:

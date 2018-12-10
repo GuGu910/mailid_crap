@@ -10,13 +10,8 @@ import progressbar
 
 
 def domain_exist():
-    try:
-        if not os.path.isfile('domains'):
-            print("\nFile 'domains' doesn't exist. Creating ...")
-            subprocess.check_output(['touch', 'domains'])
-    except Exception as e:
-        return 'Error in domain_exist(): %s' % str(e)
-    else:
+    if not os.path.isfile('domains'):
+        subprocess.check_output(['touch', 'domains'])
         return "Domains file created."
 
 
@@ -27,10 +22,10 @@ def get_domains():
             lines = f.readlines()
             if not lines:
                 return "File 'domains' is empty."
-            for domain in lines:
-                if domain not in doms:
-                    domain = domain.rstrip()
-                    doms.append(domain)
+            for dom in lines:
+                if dom not in doms:
+                    dom = dom.rstrip()
+                    doms.append(dom)
             f.close()
     except Exception as e:
         return 'Error in get_domains(): %s' % str(e)
@@ -57,6 +52,7 @@ def backup_mails(ts):
 
 
 def search_engine(search_eng, dom):
+    global url
     key = search_eng
     try:
         if key == 'google':
@@ -76,14 +72,14 @@ def search_engine(search_eng, dom):
 def google_search(dom, opt, key):
     global driver_path
     try:
-        url = search_engine(key, dom)
-        # print(url)
+        s_url = search_engine(key, dom)
+        # print(s_url)
         if sys.platform == 'linux':
             driver_path = './webdriver/chromedriver_linux64'
         if sys.platform == 'win32':
             driver_path = './webdriver/chromedriver.exe'
         browser = webdriver.Chrome(executable_path=driver_path, options=opt)
-        browser.get(url)
+        browser.get(s_url)
 
         # Getting the complete HTML content from a google search in a string format
         elements = browser.find_element_by_tag_name('html')
@@ -103,11 +99,7 @@ if __name__ == '__main__':
     time_stamp = (datetime.date(datetime.now())).strftime('%d%m%y') + '_' + str(
         (datetime.time(datetime.now())).strftime('%H%M%S'))
 
-    err = domain_exist()                        # Checking existence of domains file
-    if err:
-        print(f"\n{str(err)}")
-        sys.exit(1)
-
+    domain_exist()                     # Checking existence of domains file
     domains = get_domains()                     # Getting mail ids from a domains file
     if type(domains).__name__ == 'str':
         print(f"\n{str(domains)}")
