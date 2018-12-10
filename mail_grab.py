@@ -5,12 +5,19 @@ import re
 import os
 import sys
 import time
+import subprocess
 import progressbar
 
 
 def domain_exist():
-    if not os.path.isfile('domains'):
-        return "File 'domains' doesn't exist."
+    try:
+        if not os.path.isfile('domains'):
+            print("\nFile 'domains' doesn't exist. Creating ...")
+            subprocess.check_output(['touch', 'domains'])
+    except Exception as e:
+        return 'Error in domain_exist(): %s' % str(e)
+    else:
+        return "Domains file created."
 
 
 def get_domains():
