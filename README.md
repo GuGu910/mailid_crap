@@ -13,8 +13,9 @@ as string. Finally it will process the whole string content and matches only mai
 	    
 1. Download the `mailid_grab` code [here](https://github.com/GuGu910/mailid_grab/archive/master.zip).
 2. Put a punch of domains in a file [domains](domains).
-3. Just run a [mail_grab.py](mail_grab.py).
-4. Finally all mails will be saved in a file mails.csv
+3. Just run a [test_mail_grab.py](test_mail_grab.py) before running [mail_grab.py](mail_grab.py).
+4. If all test status `PASS` then you can run [mail_grab.py](mail_grab.py).
+4. Finally all mails will be saved and generated in a file `mails.csv`. 
 	    
 	    
 #### Testing results:
