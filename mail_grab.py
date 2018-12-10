@@ -9,7 +9,7 @@ import progressbar
 
 
 def domain_exist():
-    if os.path.isfile('domains'):
+    if not os.path.isfile('domains'):
         return "File 'domains' doesn't exist."
 
 
@@ -18,7 +18,7 @@ def get_domains():
     try:
         with open('domains', 'r') as f:
             lines = f.readlines()
-            if lines:
+            if not lines:
                 return "File 'domains' is empty."
             for domain in lines:
                 if domain not in doms:
@@ -33,7 +33,7 @@ def get_domains():
 
 def backup_mails(ts):
     global file_name
-    # time_stam = ts
+    time_stam = ts
     try:
         if time_stam:
             if os.path.isfile('mails.csv'):
