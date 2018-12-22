@@ -24,7 +24,8 @@ def get_domains():
             for dom in lines:
                 if dom not in doms:
                     dom = dom.rstrip()
-                    doms.append(dom)
+                    if not str(dom).endswith('org'):
+                        doms.append(dom)
             f.close()
     except Exception as e:
         return 'Error in get_domains(): %s' % str(e)
@@ -49,34 +50,34 @@ def backup_mails(ts):
         return 'Error in backup_mails(): %s ' % str(e)
 
 
-def search_engine(search_eng, dom):
+def search_engine(search_eng, dom, s_typ):
     global url
     key = search_eng
     try:
         if key == 'google':
-            url = 'https://google.com/?#q="@' + str(dom) + '" email'
+            url = 'https://google.com/?#q="@' + str(dom) + '" ' + s_typ
         if key == 'yahoo':
-            url = 'https://in.search.yahoo.com/search?p="' + str(dom) + '" email'
+            url = 'https://in.search.yahoo.com/search?p="' + str(dom) + '" ' + s_typ
         if key == 'ddg':
-            url = 'https://duckduckgo.com/?q="' + str(dom) + '" email'
+            url = 'https://duckduckgo.com/?q="' + str(dom) + '" ' + s_typ
         if key == 'ask':
-            url = 'https://www.ask.com/web?q="' + str(dom) + '" email'
+            url = 'https://www.ask.com/web?q="' + str(dom) + '" ' + s_typ
     except Exception as e:
         return 'Error in search_engine(): %s' % str(e)
     else:
         return url
 
 
-def google_search(dom, opt, key):
+def google_search(dom, opt, s_type, key):
     global driver_path
     try:
-        s_url = search_engine(key, dom)
-        # print(s_url)
-
         if sys.platform == 'linux':
             driver_path = './webdriver/chromedriver_linux64'
         if sys.platform == 'win32':
             driver_path = './webdriver/chromedriver.exe'
+
+        s_url = search_engine(key, dom, s_type)
+        # print(s_url)
 
         browser = webdriver.Chrome(executable_path=driver_path, options=opt)
         browser.get(s_url)
@@ -86,6 +87,7 @@ def google_search(dom, opt, key):
         content = str(elements.text).split()
         time.sleep(2)
         browser.close()  # Closing browser
+
     except Exception as e:
         return 'Error in google_search(): %s' % str(e)
     else:
@@ -118,7 +120,7 @@ if __name__ == '__main__':
     captcha_str = ''
     mail_ids = []
     ID = []
-
+    search_types = ['email', 'info', 'sales']
     # Looping all the domains
     for domain in progressbar.progressbar(domains):
         # Simple Progress
@@ -130,44 +132,44 @@ if __name__ == '__main__':
                     mail_ids.append(m_ids)
 
             ID = []     # Resetting List ID
+        for search_type in search_types:
+            while not captcha_str:
+                lines = google_search(domain, option, search_type, key='google')
+                captcha_str = 'stop_loop'
+                if 'unusual' in lines and 'traffic' in lines:
+                    captcha_str = 'unusual'
+                    if domain not in failed_domains:
+                        failed_domains.append(domain)
 
-        while not captcha_str:
-            dicts = google_search(domain, option, key='google')
-            captcha_str = 'stop_loop'
-            if 'unusual' in dicts and 'traffic' in dicts:
-                captcha_str = 'unusual'
-                if domain not in failed_domains:
-                    failed_domains.append(domain)
+            # print(lines)
 
-        # print(dicts)
-
-        # Recall the google search type url after a five unusual traffic
-        if captcha_str == 'unusual':
-            dicts = google_search(domain, option, key='ask')
-            ite += 1
-            if ite % 5 == 0:
+            # Recall the google search type url after a five unusual traffic
+            if captcha_str == 'unusual':
+                lines = google_search(domain, option, search_type, key='ask')
+                ite += 1
+                if ite % 5 == 0:
+                    captcha_str = ''
+            else:
                 captcha_str = ''
-        else:
-            captcha_str = ''
 
-        # Matching all the mailIDs from each line
-        for line in dicts:
-            mailID = re.findall('[\w]+@[\w\W]+.com', line)      # Matching mail ID
-            # print(mailID)
-            if mailID:
-                for mail in mailID:
-                    '''
-                    # Filtering the mailID by domain
-                    if domain in mail:
-                        # Removing the extra char in end of mail
-                        match = len(domain) + str(mail).index('@')
-                        mail = mail[:match + 1]
-                    '''
+            # Matching all the mailIDs from each line
+            for line in lines:
+                mailID = re.findall('[\w]+@[\w\W]+.com', line)  # Matching mail ID
+                # print(mailID)
+                if mailID:
+                    for mail in mailID:
+                        '''
+                        # Filtering the mailID by domain
+                        if domain in mail:
+                            # Removing the extra char in end of mail
+                            match = len(domain) + str(mail).index('@')
+                            mail = mail[:match + 1]
+                        '''
 
-                    # Filtering redundant mailID and .org mails
-                    if not str(mail).endswith('.org'):
-                        if str(mail).lower() not in ID:
-                            ID.append(str(mail).lower())
+                        # Filtering redundant mailID and .org mails
+                        if not str(mail).endswith('.org'):
+                            if str(mail).lower() not in ID:
+                                ID.append(str(mail).lower())
 
         mails[domain] = ID
 
