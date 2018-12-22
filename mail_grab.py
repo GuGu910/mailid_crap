@@ -5,13 +5,12 @@ import re
 import os
 import sys
 import time
-import subprocess
 import progressbar
 
 
 def domain_exist():
     if not os.path.isfile('domains'):
-        subprocess.check_output(['touch', 'domains'])
+        os.system('touch domains')
         return "Domains file created."
 
 
@@ -41,14 +40,13 @@ def backup_mails(ts):
             if os.path.isfile('mails.csv'):
                 with open('mails.csv') as f:
                     isemp = f.readlines()
-                    if isemp:
-                        file_name = 'mails_' + time_stam + '.csv'
-                        os.rename('mails.csv', file_name)
                 f.close()
+                if isemp:
+                    file_name = 'mails_' + time_stam + '.csv'
+                    os.rename('mails.csv', file_name)
+                    return "Backup Done. File name %s" % file_name
     except Exception as e:
         return 'Error in backup_mails(): %s ' % str(e)
-    else:
-        return "Backup Done. File name %s" % file_name
 
 
 def search_engine(search_eng, dom):
@@ -56,7 +54,7 @@ def search_engine(search_eng, dom):
     key = search_eng
     try:
         if key == 'google':
-            url = 'https://google.com/?#q="' + str(dom) + '" email'
+            url = 'https://google.com/?#q="@' + str(dom) + '" email'
         if key == 'yahoo':
             url = 'https://in.search.yahoo.com/search?p="' + str(dom) + '" email'
         if key == 'ddg':
@@ -74,10 +72,12 @@ def google_search(dom, opt, key):
     try:
         s_url = search_engine(key, dom)
         # print(s_url)
+
         if sys.platform == 'linux':
             driver_path = './webdriver/chromedriver_linux64'
         if sys.platform == 'win32':
             driver_path = './webdriver/chromedriver.exe'
+
         browser = webdriver.Chrome(executable_path=driver_path, options=opt)
         browser.get(s_url)
 
@@ -85,7 +85,7 @@ def google_search(dom, opt, key):
         elements = browser.find_element_by_tag_name('html')
         content = str(elements.text).split()
         time.sleep(2)
-        browser.close()     # Closing browser
+        browser.close()  # Closing browser
     except Exception as e:
         return 'Error in google_search(): %s' % str(e)
     else:
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     time_stamp = (datetime.date(datetime.now())).strftime('%d%m%y') + '_' + str(
         (datetime.time(datetime.now())).strftime('%H%M%S'))
 
-    domain_exist()                     # Checking existence of domains file
+    domain_exist()                              # Checking existence of domains file
     domains = get_domains()                     # Getting mail ids from a domains file
     if type(domains).__name__ == 'str':
         print(f"\n{str(domains)}")
@@ -124,26 +124,26 @@ if __name__ == '__main__':
         # Simple Progress
         # print('[' + str(domains.index(domain) + 1) + '/' + str(len(domains)) + ']  ' + str(domain))
 
-        while not captcha_str:
-            lines = google_search(domain, option, key='google')
-            captcha_str = 'stop_loop'
-            if 'unusual' in lines and 'traffic' in lines:
-                captcha_str = 'unusual'
-                if domain not in failed_domains:
-                    failed_domains.append(domain)
-
         if os.path.isfile('mails.csv'):
             for m_ids in ID:
                 if m_ids not in mail_ids:
                     mail_ids.append(m_ids)
 
-        ID = []     # Resetting List ID
+            ID = []     # Resetting List ID
 
-        # print(lines)
+        while not captcha_str:
+            dicts = google_search(domain, option, key='google')
+            captcha_str = 'stop_loop'
+            if 'unusual' in dicts and 'traffic' in dicts:
+                captcha_str = 'unusual'
+                if domain not in failed_domains:
+                    failed_domains.append(domain)
+
+        # print(dicts)
 
         # Recall the google search type url after a five unusual traffic
         if captcha_str == 'unusual':
-            lines = google_search(domain, option, key='ask')
+            dicts = google_search(domain, option, key='ask')
             ite += 1
             if ite % 5 == 0:
                 captcha_str = ''
@@ -151,7 +151,7 @@ if __name__ == '__main__':
             captcha_str = ''
 
         # Matching all the mailIDs from each line
-        for line in lines:
+        for line in dicts:
             mailID = re.findall('[\w]+@[\w\W]+.com', line)      # Matching mail ID
             # print(mailID)
             if mailID:
