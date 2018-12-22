@@ -61,7 +61,7 @@ def search_engine(search_eng, dom, s_typ):
         if key == 'ddg':
             url = 'https://duckduckgo.com/?q="' + str(dom) + '" ' + s_typ
         if key == 'ask':
-            url = 'https://www.ask.com/web?q="' + str(dom) + '" ' + s_typ
+            url = 'https://www.ask.com/web?q="@' + str(dom) + '" ' + s_typ
     except Exception as e:
         return 'Error in search_engine(): %s' % str(e)
     else:
