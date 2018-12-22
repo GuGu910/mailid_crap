@@ -8,10 +8,19 @@ import time
 import progressbar
 
 
+def print_color(color, info):
+    if not color:
+        print('\033[1;31;0mStatus not provided.')
+    if color == 'success':
+        print('\033[1;32;0m%s' % info)
+    if color == 'alert':
+        print('\033[1;31;0m%s' % info)
+
+
 def domain_exist():
     if not os.path.isfile('domains'):
         os.system('touch domains')
-        return "Domains file created."
+        return "Domains file created.\nPlease add domains in 'domains' file and run."
 
 
 def get_domains():
@@ -20,7 +29,7 @@ def get_domains():
         with open('domains', 'r') as f:
             lines = f.readlines()
             if not lines:
-                return "File 'domains' is empty."
+                return "File 'domains' is empty!"
             for dom in lines:
                 if dom not in doms:
                     dom = dom.rstrip()
@@ -101,15 +110,19 @@ if __name__ == '__main__':
     time_stamp = (datetime.date(datetime.now())).strftime('%d%m%y') + '_' + str(
         (datetime.time(datetime.now())).strftime('%H%M%S'))
 
-    domain_exist()                              # Checking existence of domains file
+    exist = domain_exist()                      # Checking existence of domains file
+    if exist:
+        print_color('alert', exist)
+        sys.exit(1)
+
     domains = get_domains()                     # Getting mail ids from a domains file
     if type(domains).__name__ == 'str':
-        print(f"\n{str(domains)}")
+        print_color('alert', domains)
         sys.exit(1)
 
     status = backup_mails(time_stamp)           # Taking backup of old mails.csv if the file is non-empty
     if status:
-        print(status)
+        print_color('success', status)
 
     # Browser Option for Chrome
     option = webdriver.ChromeOptions()
